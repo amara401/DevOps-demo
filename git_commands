@@ -1,0 +1,29 @@
+creating repository in two ways
+1. mkdir name
+git init
+2. git init name
+repositories- 2 types
+bare - public
+non bare
+in .git/cofig file we can c bare
+by default any rep is non-bare
+if 
+
+
+
+https://github.com/valhalla/demos.git
+https://github.com/vsbuffalo/git-demo.git
+https://github.com/githubtraining/hellogitworld.git
+
+
+ttps://github.com/valhalla/demos.git
+https://github.com/vsbuffalo/git-demo.git
+https://github.com/githubtraining/hellogitworld.git
+echo "# amar_demo" >> README.md 
+git init 
+git add README.md 
+git commit -m "first commit" 
+git remote add origin https://github.com/amara401/amar_demo.git
+git push -u origin master 
+…or push an existing repository from the command line
+git remote add origin https://github.com/amara401/amar_demo.git git push -u origin master
