@@ -1,0 +1,9 @@
+Chararcterization of communication signals and systems, Signal space representation - vector spcae concepts, signal space concepts, orthogonal expansion of signals. Representation of digitally modulated signals-memory less modulation methods.
+
+
+Principal of communicaton sytems by taub-schilling & goutamSaha 3rd edition.
+2. Digital Communication by J.SChitode
+3. Digital Communication by J.G. Prokais
+4. Digital Communication by Edward. A. Lee
+5. Digital Communication by J Marvin, K.Simon, Sami
+6. An Introduction to Probability theroy and its applications by William Feller, Vol-11

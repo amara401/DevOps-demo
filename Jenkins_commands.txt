@@ -1,0 +1,41 @@
+-----Reference links-----
+https://www.edureka.co/blog/install-jenkins/
+https://wiki.jenkins.io/display/JENKINS/Installing+Jenkins+on+Red+Hat+distributions
+https://www.linuxtechi.com/install-configure-jenkins-on-centos-7-rhel-7/
+https://docs.aws.amazon.com/whitepapers/latest/jenkins-on-aws/installation.html
+
+
+-----Jenkins_Installation-----
+#sudo wget -O /etc/yum.repos.d/jenkins.repo http://pkg.jenkins-ci.org/redhat/jenkins.repo
+#sudo rpm --import https://jenkins-ci.org/redhat/jenkins-ci.org.key
+#sudo yum install jenkins
+
+---Installation of an LTS version---
+#sudo wget -O /etc/yum.repos.d/jenkins.repo http://pkg.jenkins-ci.org/redhat-stable/jenkins.repo
+#sudo rpm --import https://jenkins-ci.org/redhat/jenkins-ci.org.key
+#sudo yum install jenkins
+
+-----Validate Java----
+#java -version		---> Check to make sure that you already have java installed by running
+# For Jenkins need minimum of Java8 or higher version.
+#sudo yum remove java		---> If u fiind the less then java8, need to uninstall and install java8 r higher
+#sudo yum install java-1.8.0-openjdk		---> install OpenJDK
+
+
+-----Start Jenkins-----
+#sudo service jenkins start		---> To start the Jenkins
+#sudo chkconfig jenkins on
+
+
+-----Jenkins_Config-----
+# cat /etc/sysconfig/jenkins		---> this is the jenkins config file
+# JENKINS_LOG=/var/log/jenkins		---> Jenkins log directory
+# cat /var/log/jenkins/jenkins.log	---> Jenkins log file
+# JENKINS_HOME=/var/lib/jenkins		---> Jenkins Home Path
+
+-----Jenkins_URL-----
+http://18.219.228.115:8080/
+user:admin
+password:admin
+
+
