@@ -1,27 +1,11 @@
-From: VN, Krishnan (Cognizant)
-Sent: Thursday, May 17, 2018 1:10 PM
-To: VN, Krishnan (Cognizant)
-Subject: RE: ansible doc
-From: VN, Krishnan (Cognizant) 
-Sent: Wednesday, May 16, 2018 3:40 PM
-To: VN, Krishnan (Cognizant) <Krishnan.VN@cognizant.com>
-Subject: RE: ansible doc
 
-From: VN, Krishnan (Cognizant) 
-Sent: Wednesday, May 16, 2018 3:37 PM
-To: VN, Krishnan (Cognizant) <Krishnan.VN@cognizant.com>
 Subject: RE: ansible doc
 
  
 
 Ansible-galaxy install username.role
 
-From: VN, Krishnan (Cognizant) 
-Sent: Wednesday, May 16, 2018 1:08 PM
-To: VN, Krishnan (Cognizant) <Krishnan.VN@cognizant.com>
-Subject: RE: ansible doc
 
- 
 
 - hosts: webservers
 
@@ -112,11 +96,6 @@ Subject: RE: ansible doc
   - name: stop firewall
 
     service: name=iptables state=stopped
-
-From: VN, Krishnan (Cognizant) 
-Sent: Wednesday, May 16, 2018 12:41 PM
-To: VN, Krishnan (Cognizant) <Krishnan.VN@cognizant.com>
-Subject: RE: ansible doc
 
  
 
@@ -264,11 +243,6 @@ tasks:
 
 - template: src=template/httpd.j2 dest=/etc/httpd/conf/httpd.conf owner=httpd
 
-From: VN, Krishnan (Cognizant) 
-Sent: Wednesday, May 16, 2018 12:01 PM
-To: VN, Krishnan (Cognizant) <Krishnan.VN@cognizant.com>
-Subject: RE: ansible doc
-
  
 
 cat ./ansible.cfg
@@ -385,11 +359,6 @@ use below command to retry only for the failed host
 
 ansible-playbook web_db.yml --limit @/home/vagrant/web_db.yml.retry
 
-From: VN, Krishnan (Cognizant) 
-Sent: Wednesday, May 16, 2018 11:27 AM
-To: VN, Krishnan (Cognizant) <Krishnan.VN@cognizant.com>
-Subject: RE: ansible doc
-
  
 
 Playbooks
@@ -482,10 +451,7 @@ Limitting execution to just the below task
 
 --limit @/home/vagrant/ping.retry
 
-From: VN, Krishnan (Cognizant) 
-Sent: Wednesday, May 16, 2018 10:42 AM
-To: VN, Krishnan (Cognizant) <Krishnan.VN@cognizant.com>
-Subject: RE: ansible doc
+
 
  
 
@@ -509,10 +475,7 @@ Ansible all –I inventory –m setup tree ./setup
 
 Creates server specific files in ./setup directory such as db1 and web1 which lists server specific facts
 
-From: VN, Krishnan (Cognizant) 
-Sent: Wednesday, May 16, 2018 10:34 AM
-To: VN, Krishnan (Cognizant) <Krishnan.VN@cognizant.com>
-Subject: RE: ansible doc
+
 
  
 
@@ -610,10 +573,7 @@ Webservers:&production:!python3
 
 (hosts defined in webservers and production nut not in python3)
 
-From: VN, Krishnan (Cognizant) 
-Sent: Wednesday, May 16, 2018 10:10 AM
-To: VN, Krishnan (Cognizant) <Krishnan.VN@cognizant.com>
-Subject: RE: ansible doc
+
 
  
 
@@ -647,10 +607,7 @@ Managing network components
 
 Etc
 
-From: VN, Krishnan (Cognizant) 
-Sent: Tuesday, May 15, 2018 4:41 PM
-To: VN, Krishnan (Cognizant) <Krishnan.VN@cognizant.com>
-Subject: RE: ansible doc
+
 
  
 
@@ -702,10 +659,7 @@ Host_key_checking
 
 Log_path
 
-From: VN, Krishnan (Cognizant) 
-Sent: Tuesday, May 15, 2018 3:38 PM
-To: VN, Krishnan (Cognizant) <Krishnan.VN@cognizant.com>
-Subject: RE: ansible doc
+
 
  
 
@@ -783,10 +737,7 @@ Group_vars (group)
 
 Group_vars (host)
 
-From: VN, Krishnan (Cognizant) 
-Sent: Tuesday, May 15, 2018 11:32 AM
-To: VN, Krishnan (Cognizant) <Krishnan.VN@cognizant.com>
-Subject: ansible doc
+
 
  
 
