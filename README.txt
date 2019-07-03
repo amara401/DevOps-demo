@@ -1,7 +1,7 @@
 …or create a new repository on the command line
 echo "# amar_demo" >> README.md
 git init
-git add README.md
+git add README.md: some data added into the readme file
 git commit -m "first commit"
 git remote add origin https://github.com/amara401/amar_demo.git
 git push -u origin master
