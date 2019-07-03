@@ -1,7 +1,7 @@
 pipeline {
 	agent any
 	stages {
-			stage ('Checkout') {
+			stage ('Checkout') { unwanted data
 			steps {
 				echo "Do the SVN/GIT Checkout"
 				}
