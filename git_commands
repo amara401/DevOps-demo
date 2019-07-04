@@ -27,3 +27,7 @@ git remote add origin https://github.com/amara401/amar_demo.git
 git push -u origin master 
 …or push an existing repository from the command line
 git remote add origin https://github.com/amara401/amar_demo.git git push -u origin master
+creating branch :
+git branch branch_name
+switching to another branch:
+git checkout branch_name
