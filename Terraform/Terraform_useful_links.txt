@@ -1,0 +1,36 @@
+Terraform:
+
+https://github.com/terraform-providers/terraform-provider-aws/blob/master/examples/two-tier/main.tf
+https://github.com/dokadon/terraform-web-server/blob/master/web-server/web-server.tf
+https://github.com/brucedominguez/Windows-2016svr-Packer-Terraform
+https://github.com/wardviaene/terraform-course	---> Udemy Course
+
+terraform-WebAppWithRDS: Install an Apache web server with PHP, and create a MySQL database. The web server runs on an Amazon EC2 instance using Amazon Linux, and the MySQL database is an Amazon RDS MySQL DB instance. Both the Amazon EC2 instance and the Amazon RDS DB instance run in a VPC based in Amazon Virtual Private Cloud service
+https://github.com/shazChaudhry/terraform-WebAppWithRDS
+ 
+https://medium.com/slalom-technology/creating-your-first-terraform-infrastructure-on-aws-ad986f952951
+https://learn.hashicorp.com/terraform/getting-started/build.html
+https://ifritltd.com/2017/12/05/spinning-up-an-ec2-with-terraform-and-vault/
+AWS Automation Part 4: Using Terraform for AWS Automation
+https://vocon-it.com/2016/09/22/aws-automation-part-4-using-terraform-for-aws-automation/
+ 
+Terraform With AWS
+https://dzone.com/articles/terraform-with-aws
+ 
+Deploying Windows EC2 instance using Terraform
+ 
+https://geekdudes.wordpress.com/2018/01/08/deploying-windows-ec2-instance-using-terraform/
+ 
+https://www.onica.com/blog/cloud-automation-in-windows-with-terraform/
+ 
+How to Use Terraform with EC2 instances: Deploying and Removing
+https://adamtheautomator.com/terraform-ec2-instance/
+ 
+ 
+Install Citrix XenDesktop 7.6 Server VDA from the Command Line
+https://www.sinisasokolic.com/install-citrix-xendesktop-7-6-server-vda-from-the-command-line/
+How Disable Internet Explorer 11 In Windows 10 Using PowerShell
+https://www.ntweekly.com/2015/11/16/how-disable-internet-explorer-11-in-windows-10-using-powershell/
+Preparation for SQL Server installation
+https://sqlplayer.net/2018/12/preparation-for-sql-server-installation/
+https://www.niallbrady.com/2018/04/25/install-sql-server-2017-powershell-script-download-it-here/

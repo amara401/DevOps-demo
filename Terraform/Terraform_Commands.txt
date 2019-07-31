@@ -1,0 +1,71 @@
+Install Terraform:
+#sudo yum update
+#sudo wget https://releases.hashicorp.com/terraform/0.12.2/terraform_0.12.2_linux_amd64.zip
+sudo unzip ./terraform_0.12.2_linux_amd64.zip –d /usr/local/bin
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+How to run the terraform scripts:
+1. Now we will run the “terraform init” command where we created our instance.tf file to download and initialize the appropriate provider plugins. 
+	$ terraform init
+2. Once this is complete, let's run the “terraform plan” command. This will let us see what Terraform will do before we decide to apply it.
+	$ terraform plan
+3. Now to create the instance, we run the “terraform apply” command.
+	$ terraform apply -auto-approve
+4. We can check the state from file:
+	$ ls –la
+	$ cat terraform.tfstate
+5. You can inspect the current state using “terraform show”
+6. Destroy the Instance
+	a. Check the Plan for Destruction
+        $ terraform plan -destroy
+	b. Apply the Plan with “Destroy” Option
+		$ terraform destroy
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+provider "aws" {
+  region     = "us-east-2"
+  access_key = "AKIAV2FTNHEJ3QRBJUUA"
+  secret_key = "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"
+}
+
+resource "aws_instance" "demo_inst" {
+  ami = "ami-0520e698dd500b1d1"
+  instance_type = "t2.micro"
+}
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+provider "aws" {
+  region     = "us-east-2"
+  access_key = "AKIAV2FTNHEJ3QRBJUUA"
+  secret_key = "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"
+}
+
+# Create security group with web and ssh access
+resource "aws_security_group" "UI_Deploy" {
+  name = "UI_Deploy"
+ 
+  ingress {
+    protocol    = "tcp"
+    from_port   = 22
+    to_port     = 22
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+ 
+  ingress {
+    protocol    = "tcp"
+    from_port   = 80
+    to_port     = 80
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}
+
+# Get the AWS Microsoft Windows Server 2019 Base image
+resource "aws_instance" "UI_Deploy" {
+  ami = "ami-0eaa025a752a23c5b"
+  instance_type = "t2.micro"
+  vpc_security_group_ids = ["${aws_security_group.UI_Deploy.id}"]
+  tags = {
+    Name = "UI_PATH_DEPLOY"
+  }
+}
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
