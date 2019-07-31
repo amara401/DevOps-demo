@@ -24,8 +24,8 @@ How to run the terraform scripts:
 
 provider "aws" {
   region     = "us-east-2"
-  access_key = "AKIAV2FTNHEJ3QRBJUUA"
-  secret_key = "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"
+  access_key = "<ACCESS_KEY>"
+  secret_key = "<SECURITY_KEY>"
 }
 
 resource "aws_instance" "demo_inst" {
@@ -36,8 +36,8 @@ resource "aws_instance" "demo_inst" {
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 provider "aws" {
   region     = "us-east-2"
-  access_key = "AKIAV2FTNHEJ3QRBJUUA"
-  secret_key = "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"
+  access_key = "<ACCESS_KEY>"
+  secret_key = "<SECURITY_KEY>"
 }
 
 # Create security group with web and ssh access
