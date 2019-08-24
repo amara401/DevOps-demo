@@ -1,0 +1,105 @@
+pipeline {
+	agent any
+	stages {
+			stage ('Checkout') {
+			steps {
+				echo "Do the SVN/GIT Checkout"
+				}
+			}
+			
+			stage ('Build') {
+			steps {
+				echo "Build by using ANT/MAVEN"
+				}
+			}
+			
+			stage ('Test') {
+			steps {
+				echo "Do the test by using Junit/Selenium"
+				}
+			}
+			
+			stage ('QA') {
+			steps {
+				echo "Do the Qa testing"
+				}
+			}
+			
+			stage ('deploy') {
+			steps {
+				echo "Deploy the artifacts respectuve servers by using Ansible/chef/docker...etc"
+				}
+			}
+			
+			stage ('Monitor') {
+			steps {
+				echo "Monitot the application by using sonarcube/Javamelody"
+				}
+			}
+		}
+}	
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+###---Declarative Pipeline---###
+pipeline {
+         agent any
+         stages {
+                 stage('One') {
+                 steps {
+                     echo 'Hi, this is amar from Joctopus'
+                 }
+                 }
+                 stage('Two') {
+                 steps {
+                    input('Do you want to proceed?')
+                 }
+                 }
+                 stage('Three') {
+                 when {
+                       not {
+                            branch "master"
+                       }
+                 }
+                 steps {
+                       echo "Hello"
+                 }
+                 }
+                 stage('Four') {
+                 parallel { 
+                            stage('Unit Test') {
+                           steps {
+                                echo "Running the unit test..."
+                           }
+                           }
+                            stage('Integration test') {
+                              agent {
+                                    docker {
+                                            reuseNode true
+                                            image 'ubuntu'
+                                           }
+                                    }
+                              steps {
+                                echo "Running the integration test..."
+                              }
+                           }
+                           }
+                           }
+              }
+}
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+###---Scripted Pipeline Demo---###
+node {
+      for (i=0; i<2; i++) { 
+           stage "Stage #"+i
+           print 'Hello, world !'
+           if (i==0)
+           {
+               git "https://github.com/amara401/amar_demo"
+               echo 'Running on Stage #0'
+           }
+           else {
+               build 'Declarative pipeline'
+               echo 'Running on Stage #1'
+           }
+      }
+}			

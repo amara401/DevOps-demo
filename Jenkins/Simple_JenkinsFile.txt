@@ -1,0 +1,29 @@
+node {
+    
+	stage ('GIT Checkout'){ 	 
+      checkout([$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'dcf1d6a5-bcad-4f8a-af9a-ef6453548abe', url: 'https://github.com/amara401/amar_demo']]])
+
+	}	
+    stage ('BuildDEV '){
+      sh '''
+	    cd $WORKSPACE
+		ls -larth
+      '''
+    }  
+    
+    stage ('DeployDev') {
+        sh """
+		  [ -d ${DIR_NAME} ] || mkdir -p ${DIR_NAME}
+		  
+           """
+    }
+    
+	
+    stage ('Email Notification') {
+        currentBuild.result = 'SUCCESS'
+	     echo "RESULT: ${currentBuild.result}"
+         emailext attachLog: true, body: "${env.JOB_NAME}-${env.BUILD_NUMBER}", compressLog: true, replyTo: 'demo@gmail.com',
+         subject: "Build Notification: ${JOB_NAME}-Build# ${BUILD_NUMBER} ${currentBuild.result}", to: 'demo@gmail.com'
+		//nofityEmail(currentBuild.result)
+    } 
+}
