@@ -1,0 +1,339 @@
+1. Kubectl Autocomplete
+#echo "souce (kubectl completion bash)" >> ~/.bashrc
+
+###---kubernetes context & configuration---###
+1) Show merged "kubconfig" setting
+#kubectl config view
+# cat ~/.kube/cofig
+
+2) Use multiple kubconfig files at the same time & view merged config
+#KUBCONFIG=~/.kube/config:~/.kube/kubconfig2
+#kubectl config view
+
+3) Get the password for the ec2 user
+#kubectl config view -o jsonpath='{.users[?@.name=="ec2"].user.password}'
+
+4. Get the list of user
+# kubectl config view -o jsonpath='{.users[].name}'
+
+5. Modifies the kubeconfig file
+#kubectl  config --kubeconfig <file_name>
+
+6. Displys the current context
+#kubectl config current-context
+
+7. Describes one or many conexts
+#kubectl config get.contexts
+output: CURRENT		NAME 		CLUSTER		AUTHERINFO	NAMESPACE
+		*			MINIKUBE	MINIKUBE	minikube
+
+8.Displays cluster define in the kubeconfig
+# kubectl config get-clusters
+output:	NAME
+		minikube
+		
+9. Delete the specified cluster from kubeconfig
+#kubectl config delete-cluster <CLuster_Nmae>
+
+10. Delete the specified context from kubeconfig
+# kubectl config delete-context <context_Name>
+
+11. Set the cluster entry in kubernetes
+# kubectl config set-cluster <cluster_Name>
+	[--server = server] [--certificateauthority = /path/to/certificate/authority/] [--insure-skip-tls-verify = true]
+	
+12. Set a context entry in kubernets entry point
+# kubectl config set-context <context_Nmae> --cluster=<Cluster_Name> --user=<User_name> --namespace=<NAMESPACE>
+
+13. Set a user entry in kubeconfig
+# kubectl config set-credentials <cluster> --username=<username> --password=<PASSWORD>
+
+14.Set a context utilizing
+# kubectl config use-context <conexts_name>
+
+15. Sets an individual value in kubeconfig file
+# kubectl config set <PROPERTY_NAME> <PROPERTY_VALUE>
+
+16. Delete user from kubeconfig
+# kubectl config unset user.<User_Name>
+
+17. Copy files and directories to and from containers
+# kubectl cp /tmp/foo <some-pod>:/tmp/bar -c <Specific_Container>
+
+NOTE: - "apply" manages applications through files defining kubernetes resurces
+- It creates & updates resources in a cluster through running "kubectl apply"
+
+###---Creating Objects---###
+NOTE: Kubernets manifest file can be define in JSON or YMAL format
+
+1. Create resources
+# kubectl apply -f /manifest/file/path
+
+2. Create from multiple files
+# kubectl apply -f /manifest/file1/path-1 /manifest/file2/path-2
+
+3. Create resources in all manifest files in dir
+# kubectl apply -f /dir/path
+
+4. Create resources from URL
+#kubectl apply -f https://<mainifest_URL>
+
+5. Start a single instance of nginx
+# kubectl create deployment nginx --image=nginx
+
+6. get the documentation for POD and SVC manifests
+# kubectl explain pods,svc
+
+###---Viewing, Fining Resources---###
+1. List all pods in ps output format
+#kubectl get pods
+
+2. List all pods with more information (like node name)
+#kubectl get pods -o wide
+
+3. List a single replication controller with specified NAME in ps output format 
+# kubectl get rc <RC_NAME>
+
+4. List deployments in JSON output format in the V1 version of the   API group
+#kubectl get deploymnets.v1.apps -o json
+
+5. List a single pod in JSON/YMAL output format
+# kubectl get -o json pods <POD_NAME>
+
+6. return only the place value of the specified pod
+#kubectl get -o templete pod/<POD_NAME> --template={{.status.phase}}
+
+7. List all replica controller and services together in ps output format
+# kubectl get rc,services
+
+8. List all pods in all namespaces
+# kubectl get pods --all-namespaces
+
+9. List services sorted by name
+# kubectl get service --sort-by=.metadata.name
+
+10. Get the version label of all pods with label app=cassandrs
+# kubectl get pods --selector=app=cassandra rc -o jsonpath='{.items[*].metadata.labels.version}'
+
+11. Get all worker nodes (use a selector to exclude results that have a lable names 'node-role.kubernetes.io/master')
+# kubectl get node --selector='!node-role.kubernetes.io/master'
+
+12. Get all running pods in the namespace
+# kubectl get pods --field-selector=status.phase=Running
+
+13. get external IP's of all nodes
+#kubectl get nodes -o jsonpath='{.items[*].status.addresses[?(@.type=="ExternalIP")].address}'
+
+14. List names of pods that belong to perticular RC
+#sel=${{$(kubectl get rc my-rc --output=json jq -j '.spec.selector | to-entries | .[] | "\(.key)=\(.value),"')%?}
+
+#echo $(kubectl get pods --selector=$sel --output=jsonpath={.items.metadata.name})
+
+NOTE: "jq command useful for transformation that are too complex for jsonpath" 
+REF: https://stedolan.github.io/jq/
+
+14. Show labels for all pods
+for item in $(kubectl get pod --output=name)
+do
+	printf "Labels for %s\n " "$item" | grep --color -E '[^/]+$' && kubectl get $item --output=json | jq -r -s '.metadata.labels | to-entries | .[]| "\(.key)=\(value)"' 2>/dev/null;
+	printf "\n"
+done
+
+15. List events sorted by timestamp
+$kubectl get events --sort-by=.metadata.CreationTImestamp
+
+16.Check which nodes are ready
+JSONPATH='{range .items[*]}{@.metadata.name}:{range @.status.conditions[*]}{@.type}={@.status};{end}{end}' && kubectl get nodes -o json="$JSONPATH" | grep "Ready=True"
+
+17. List all secrets currently i  use by a PODS
+# kubectl get pods -o json | jq '.items[].spec.containers[].env[]?.ValueFrom.SecretKeyRef.name' | grep -v null | sort | uniq
+
+###---Updating Resources---###
+- Performs a rolling update on a RC
+- Replaces the specified RC with a new RC by updateing a POD at a time.
+
+1. Rolling udpate "WWW" containers of "frontend" deployment, updating the image
+#kubectl set image deployment/frontend www=image:v2
+
+2. Rollback to the previous deployment 
+# kubectl rollout undo deplyment/fronend
+
+3. Qatch rolling update status of "frontend" deployment until completion
+#kubectl rollout status -w deployment/frontend
+
+4. Change the name of the resource and update the image (deprecated)
+# kubectl rolling-update frontend-v1 frontend-v2 --iamge=image:v2
+
+5.Replacing a pod based on the JSON passed into std
+#cat pd.json | kuectl repalce -f -
+
+6. Force repalce, delete and then re-create the resource. Will cause a "service outage"
+# kubectl replace --force -f ./pod.json
+
+7. Create a service for a replicated nginx, which serves on port 80 and connect to the containers on port 8000
+# kubectl expose rc nginx --port=80 --target-port=8000
+
+8. Update a single-container pods image version (tag) to v4
+# kubectl get pod mypod -o yml | sed 's/\(image:myimage):.*$/\1:v4/' | kubectl replace -f -
+
+9. Add label
+# kubectl label pods my-pod --new-label=<label_name>
+
+10. Add an annotation
+# kubectl annotate pods my-pod icon-url=http://google/xxBTWq
+
+11. Auto scale a deployment "foo"
+# kubectl autoscale deployment foo --min=2 --max=10
+NOTE: This is used to auto scale pods whic are define such as deployment, replicaSet and replication controller (RC)
+
+###---Patching Resources---###
+1. Partiall upodate a node 
+# kubectl patch node k8s-node-a -p '{"spec":{'unschedulable':true}}'
+
+2. Update a containers image
+#kubectl patch pod valid-pod -P '{"spec":{"containers":[{"name":"kub-host","image":"<New_Image>"}]}}'
+
+3. Update a containers image using a JSON patch with positional arrays
+# kubectl path pod valid-pod --type=json -P '[{"op":"replace","path":"/spec/containers/o/image","value":"<New_image>"}]'
+
+4. Disable a ddeployment invenssProbe using a JSON patch with positional arrays
+#kubectl path deployment valid-deployment --type json -P '[{"op":"remove","path":"/apec/template/spec/containers/o/livenessProb"}]'
+
+5. Add a new element to a positional array
+#kubectl patch sa default --type=json -P '[{"op":"add","path":"/secrets/1","value":{"name":"whatever"}}]'
+
+###---Editing Resources---###
+1. kubectl edit /svc/docker-registry
+
+###---Scaling Resources---###
+- It will scale the size of kubernets deployment ReplicaSet, ReplicationController or job
+
+1. Scale a replicaset named "foo" to 3
+# kubecctl scale --replicas=3 rs/foo
+
+2. Scale a resource specified in "foo.yaml"
+# kubectl scale --replicas=3 -f foo-yaml
+
+3. scale mutiple replication controllers
+#kubectl scale --replicas=5 rc/foo rc/bar
+
+###---Deleting Resources---###
+- Deleteing resources by file name, std_in, resource and name
+
+1. Delete a POD using the type and name specified in pod.json
+# kubectl delete -f ./pod.json
+
+2. delete pods and service with same names
+# kubectl delete pod,service baz foo
+
+3. Delete pods and service with "label name"
+# kubectl delete pods,service -l name-mylabel
+
+4. Delete pods and service, including uninitialized ones in namespace "my-ns"
+# kubectl -n my-ns delete po,svn --all
+
+#kubectl get pods -n mynamespace --no-headers=true | awk '/pattern1 |pattern2/ {print $1}' | xargs kubectl delete -name mynamespce pod 
+
+###---Interacting with running pods---###
+- They are used to get the logs of the container in a pod 
+- Printing the logs can be defining the container name in the pod. If the pod has only one container there is no need to define its name.
+
+1. Dump POD logs (stodout)
+# kubectl logs my-pod 
+
+2. Dump pod logs with label
+# kubectl logs -l name=mylabel 
+
+3. Dump pod logs for a previous instantiation of a container
+# kubectl logs my-pod --previous 
+
+4. Dump POD container logs (multi-containers)
+# kubectl logs my-pod -c container
+
+# kubectl logs -l name=mylabel -c my-container 
+
+5. Stream pod logs
+# kubectl logs -f my-pod 
+
+6. Stream pod container logs (multi-containers)
+# kunectl logs -f -l name=mylabel --all-container 
+
+7. Run pod as interactive mode shell
+# kubectl run -i --tty busybix --image=busybix --sh 
+
+8. Attach a running coontianer
+# kubectl attach my-pod -i
+
+9. Listen on port 500 on the local machine and forward t port 600 on my-pod
+# kubectl port-forward my-pod 5000-6000
+
+10. Run command in existing POD
+# kubectl exec my-pod -c my-contianer --ls/
+
+11. show metrics for a given pod and its containers
+# kubectl top pod POD_NAME --containers
+
+###---Interacting with Nodes and Clusters---###
+
+1.mark my-node as unschedule
+#kubectl cordon my-node
+
+2. Mark my-node as schedulable 
+# kubectl uncordon my-node 
+
+3. Drain my-node in preparation for maintenance
+# kubectl drain my-node 
+
+NOTE: This will mark the node as unavailable so that it should not be assigned with new container which will be created.
+
+4. Display address of the master and service`
+# kubectl cluster-info
+
+5. Dump current cluster state to stdout
+# kubectl cluster-info dump
+
+# kubectl cluster-info dump --output-director=/path/to/cluster-state
+
+6. To display CPU/Memory/Storage usge, the "top" command allows you to see the resources consumption for nodes.
+# kubectl top node my-node
+
+
+###---Resources type---###
+1. All namespaced resources 
+# kubectl api-resources --namespaced=true
+
+2. All Non-namespaces resources 
+# kubectl api-resources --namespaced=false
+
+3. All resources with simple output (inst resource name )
+# kubectl api-resources -o name 
+
+4. All resources with expanded output 
+# kubectl api-resources -o wide 
+
+5. All resources that support the "list" and "get" request verbs
+# kubectl api-resources --verbs=list,get
+
+6. All resources in the "extension" API group
+# kubectl api-resources --api-group-extensions
+
+
+###---Log/Config files and paths
+1. Config Dir: /etc/kubernetes/
+2. Certificate files: /etc/kubernetes/pki/
+3. Credentials to API server: /etc/kubernetes/kubelet.conf 
+4. SuperUser credentials: /etc/kubernetes/admin.config 
+5. kubectl config file: ~/.kube/config 
+6. Kubernetes working dir: /var/lib/kubelet/
+7. Dokcer working dir: /var/lib/docker/, 
+					   /var/log/containers/
+8."etcd" working dir: /var/lib/etcd/
+9. Network cni: /etc/cni/net.d/
+10. Log files: /var/log/pods/
+11. Log in worker node: /var/log/kubelet.log,
+						/var/log/kube-proxy.log 
+12. log in master node: kube-apiserver.log,
+						kube-schedule.log, 
+						kube-controller-manager.log 
+13. ENV: /etc/systemd/system/kubelet.service.d/10.kubeadm.conf 
+14. ENV: export KUBECONFIG=/etc/kubernetes/admin.conf

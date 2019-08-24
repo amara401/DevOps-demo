@@ -1,0 +1,63 @@
+
+###---gitlab_projects---###
+https://github.com/brucedominguez
+https://github.com/shazChaudhry
+https://github.com/wardviaene/
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+https://kubernetes.io/docs/tutorials/kubernetes-basics/
+https://kubernetes.io/docs/concepts/overview/what-is-kubernetes/
+
+https://www.tutorialspoint.com/kubernetes/index.htm
+
+What Is Kubernetes? An Introduction To Container Orchestration Tool
+https://www.edureka.co/blog/what-is-kubernetes-container-orchestration
+https://www.edureka.co/blog/kubernetes-architecture/
+
+What is Kubernetes? An Introductory Overview
+https://cloudacademy.com/blog/what-is-kubernetes/
+
+Container management with Kubernetes: Practical Example
+https://blog.zhaw.ch/icclab/container-management-with-kubernetes-practical-example/
+
+What is Kubernetes? Container orchestration explained
+https://www.infoworld.com/article/3268073/what-is-kubernetes-container-orchestration-explained.html
+
+An Introduction to Kubernetes
+https://www.digitalocean.com/community/tutorials/an-introduction-to-kubernetes
+
+Using advanced Kubernetes autoscaling with Vertical Pod Autoscaler and Node Auto Provisioning
+https://cloud.google.com/blog/products/containers-kubernetes/using-advanced-kubernetes-autoscaling-with-vertical-pod-autoscaler-and-node-auto-provisioning
+
+Kubernetes Autoscaling 101: Cluster Autoscaler, Horizontal Pod Autoscaler, and Vertical Pod Autoscaler
+https://medium.com/magalix/kubernetes-autoscaling-101-cluster-autoscaler-horizontal-pod-autoscaler-and-vertical-pod-2a441d9ad231
+
+IBM Cloud Kubernetes Service
+https://www.ibm.com/cloud/container-service?S_PKG=AW&cm_mmc=Search_Google-_-Cloud_Cloud+Platform-_-WW_IN-_-+kubernetes++tutorial_Broad_&cm_mmca1=000023UA&cm_mmca2=10010608&cm_mmca7=9061991&cm_mmca8=kwd-302677820138&cm_mmca9=_k_Cj0KCQjwov3nBRDFARIsANgsdoFl7b5Xx9STyQBrcra1BviOPjmRlDrHZArt6bIeXcoxGEdDeHefKwAaAukDEALw_wcB_k_&cm_mmca10=346413514443&cm_mmca11=b&mkwid=_k_Cj0KCQjwov3nBRDFARIsANgsdoFl7b5Xx9STyQBrcra1BviOPjmRlDrHZArt6bIeXcoxGEdDeHefKwAaAukDEALw_wcB_k_|1445|730586&cvosrc=ppc.google.%2Bkubernetes%20%2Btutorial&cvo_campaign=000023UA&cvo_crid=346413514443&Matchtype=b&gclid=Cj0KCQjwov3nBRDFARIsANgsdoFl7b5Xx9STyQBrcra1BviOPjmRlDrHZArt6bIeXcoxGEdDeHefKwAaAukDEALw_wcB
+
+70 Best Kubernetes Tutorials
+https://www.aquasec.com/wiki/display/containers/70+Best+Kubernetes+Tutorials
+
+Kubernetes Tutorial - an Introduction to the Basics
+https://www.keycdn.com/blog/kubernetes-tutorial
+
+kubectl-commands
+https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands
+
+kubectl Cheat Sheet
+https://kubernetes.io/docs/reference/kubectl/cheatsheet/
+https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands
+
+Kubernetes - Kubectl Commands
+https://www.tutorialspoint.com/kubernetes/kubernetes_kubectl_commands.htm
+
+kubernetes/docker/jenkins/groovy Cheat sheet
+https://cheatsheet.dennyzhang.com/
+
+https://github.com/dennyzhang/cheatsheet-kubernetes-A4
+
+Kubernetes Videos:
+Getting Started with Kubernetes by Nigel Poulton
+https://app.pluralsight.com/library/courses/getting-started-kubernetes/recommended-courses
