@@ -1,0 +1,158 @@
+Installing Docker Package:
+1. Switch to root user
+$sudo su
+
+2. Install docker package
+$sudo yum install -y docker
+
+3. Start the docker service
+$sudo systemctl start docker
+$sudo systemctl status docker
+
+4. Enable Docker
+$sudo systemctl enable docker
+
+5. Docker Version
+$docker -v
+
+6. Docker information
+$docker info
+
+7. Verify that docker installed correctly by running "hello-worl image"
+$sudo docker run hello-world
+
+###--- Creating docker group for grant privilegaes equivalent to the root---###
+1. Create the docker group
+$sudo groupadd docker
+
+2. Add susers to the docker group
+$sudo usermod -aG docker $USER
+
+3. Restart the docker daemon
+$sudo service docker restart
+
+4. Logout & logback in so that your group is re-evaluated
+$exit
+
+5. Check, Docker works without sudo
+$docker version
+$docker info
+$docker run hello-world
+
+###---Docker run Commands---###
+#docker search centos5		---> Search for docker images
+#docker pull docker.io/xerial/centos5-linux-x86_64		---> pull the docker images
+#docker images		---> list the docker pulled images
+#docker run -it <images_ID> /bin/bash	---> create a continer from docker images
+#docker run -it -h my --name my1 <image_ID> /bin/bash	---> create a continer from docker images with alias name
+#docker inspect <image_ID>|<Container_ID>		---> to know the more information about hte container/Images
+#docker rm <Container_ID>
+#docker rmi <Image_ID>
+
+###---Containers Exited state | resume---###
+#docker run -it -h my --name my docker.io/adrianotto/centos6 /bin/bash
+my#>exit
+#docker ps -a	--->List of all container
+#docker start my2	---> to start the stopped container
+#docker ps -a
+#docker attach my2	---> to enter into the container
+
+###---Installing Apache in Container---###
+#docker pull ubuntu:14.04	---> Download Ubuntu Image
+#docker images
+#docker run <image_ID> echo "hello"		---> to run an application inside container which would print “hello”
+#docker ps -a
+#docker run -t -i ubuntu:14.04 /bin/bash	---> /bin/bash : this command would launch bash shell inside container.
+#Now we are inside container. Type "exit" to come out of the container
+#docker run --name WebServer -p 80:80 -t -i ubuntu:14.04 /bin/bash	---> create container name “WebServer” and map the ports 80.
+#Now we are inside the container. We would need to install Apache inside it and start it.
+	#apt-get update
+	#apt-get install apache2
+	#service apache2 start
+#Now try to access the webserver using the public ip of host system in web browser. ex: http://<host_ip>
+#Please verify 80 port is open on the security group of the ec2 instance of host system.
+#Now, the web server should work fine.
+#Press "Ctrl+p" and "Ctrl+q" to come out of the container. This would keep the container running behind. We can verify it using
+#sudo docker ps -a
+#docker commit -m "Apache web server" -a "amar_m" <container_ID> ubuntu:Apache	--->We can save this “Webserver” Container as image using docker commit command.
+#docker images
+#docker run -it --name My_Apache_Test -d -p 1881:80 <image_ID>	---> Create a container and run in daemon mode with port 1881
+#docker exec -it My_Apache_Test /bin/bash 	---> To enter into the container just we created, here if "exit" also container has been running state
+#docker attach <Container_ID>	---> To enter into the container just we created, here if "exit" also container has been stopped state
+
+###---install apache in centos---###
+#docker pull centos
+#docker run -it -d --privileged --name centos_HTTPD -p 1445:80 <Image_ID> /usr/sbin/init
+#docker exec -it <Container_ID> /bin/bash
+#COPY index.html /var/www/html/		---> ref for more basic html https://www.quackit.com/html/examples/
+#systemctl start httpd
+
+
+###---Save/export and load container into/from backup (tar/war/zip)---###
+#docker save <image_ID> > <name_of_tar>.tar
+#docker export <continer_ID> > <name_of_tar>.tar
+#docker load < <name_of_tar>.tar
+#docker tag <existing_image_tag>:<version> <new_iamge_tag>:<version>
+
+
+###--Build image from Dockerfile---###
+#vi Dockerfile
+#docker build -t mywebapp .
+#docker run -p 80:8080 mywebapp 
+
+
+###---log monitoring---###
+#docker logs -f <container_ID>
+#docker history <Image_ID>
+
+###---Volumes---###
+1. docker run -it -d -v /var/lib/postgresql <images_id>
+##--Create a volume--##
+#docker volume create <vol_name>
+#docker volume list
+#docker volume inspect <vol_name>
+#docker volume create --name demo --opt O=size=100m		---> Creating volume of size 100mb and with a name of demo
+#docker volume ls	---> to list the volumes
+
+##--Sharing volume between container--##
+1. docker volume create <vol_name>
+2. docker pull httpd:2.4
+3. docker run -it -d --name www --mount source=<vol_name>, destination=/usr/local/apaache2/htdocs httpd:2.4
+4. docker ps -a 
+5. docker inspect 
+6. docker exec -it www /bin/bash 
+7. echo "this is demo volume message" > /user/local/apache2/htdocs/index.html
+8. access via containerID ip via GUI
+9. docker run -it -d --name www2 --mount source=<vol_name> destination=/user/local/apache2/htdocs httpd:2.4
+10. access via containerIP
+
+
+###---others---###
+#docker stop <Container_ID>		---> to stop the container
+#docker start <Container_ID>	---> to start the container
+#docker inspect fc8c6e6dd4f3 | grep -i ip
+#docker ps
+#docker exec fc8c6e6dd4f3 df -kh
+#df -h
+#docker exec fc8c6e6dd4f3 ps -eaf
+#docker rename 0a9b133ebfcf server1
+#docker ps
+#docker top 0a9b133ebfcf
+#docker push scmgalaxy/ub-up-gi
+#docker stats <container_ID>	---> to monitor the docker container
+#/var/lib/docker	---> docker keep all temp files related to images building & layers here
+
+
+###---Remove container/Images---###
+1. docker ps -a | grep Exited | awk '{ print $1 }' | xargs docker rm	---> to remove the stopped container
+2. docker container prune 	--->to remove the stopped container
+3. docker ps -a | grep "days ago" | awk '{ print $1 }' | xargs docker rm	---> To remove all containers u can have filter for days and weeks ago.
+4. docker rmi $(docker images --filter "dangling=true" -q)		---> to remove dangling images
+5. docker image prune 	---> remove unused images 
+6. docker image prune -a 	---> to remove all images
+7. docker container prune -a 	---> to remove all containers
+8. docker network prune		---> to remove unused network
+9. docker system prune --all 	--->to remove unused images (including dangling images), containers, networks and volumes
+	# "prune" will ask for confirmation to delete or not. 
+10. docker images prune -af		---> it wont ask for confirmation to delete.
+11. docker volume prune -af		---> to remove the all volumes with out popup for confirmation

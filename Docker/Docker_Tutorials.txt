@@ -1,0 +1,38 @@
+https://stackify.com/docker-tutorial/
+https://dzone.com/articles/50-useful-docker-tutorials-for-it-professionals-fr
+https://www.guru99.com/docker-tutorial.html
+https://docker-curriculum.com/
+https://www.linuxtechi.com/build-docker-container-images-with-dockerfile/
+https://www.linuxtechi.com/20-useful-docker-command-examples-linux/
+https://afourtech.com/guide-docker-commands-examples/
+
+Play with Docker classroom
+https://training.play-with-docker.com/docker-volumes/
+
+how to find the crashed or unused docker containers/images
+https://gist.github.com/bastman/5b57ddb3c11942094f8d0a97d461b430
+https://stackoverflow.com/questions/30794108/docker-cannot-remove-dead-container
+https://stackoverflow.com/questions/32723111/how-to-remove-old-and-unused-docker-images
+https://github.com/vishalvsh1/docker-image-cleanup/blob/master/docker-image-cleanup.sh
+
+How To Remove Docker Images, Containers, and Volumes
+https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes
+
+Docker: What is a dangling image and what is an unused image?
+https://stackoverflow.com/questions/45142528/docker-what-is-a-dangling-image-and-what-is-an-unused-image
+
+DevOps:
+https://github.com/vishalvsh1?tab=repositories
+
+Documentaions:
+A Hands on Introduction to Docker
+https://resources.sei.cmu.edu/asset_files/Presentation/2017_017_001_497378.pdf
+
+Introduction to Docker - Zenoss Wiki
+wiki.zenoss.org/download/core/drich_slides/DockerSlides.pdf
+https://docs.inftec.ch/download/attachments/30801995/Docker.pptx?version=2&modificationDate=1418921638000&api=v2
+
+http://www.mcs.csueastbay.edu/~grewe/CS6320/Mat/cloud/Docker_Virtuozo.pptx
+https://www.snia.org/sites/default/files/CSI/SNIA_Intro_to_Containers_Container_Storage_and_Docker_Final.pdf
+https://static.rainfocus.com/oracle/oraclecode17/sess/1487918146605001odgz/PF/docker-101%20-%20entry_1500799817749001nweP.pptx
+https://synerzip.com/wp-content/uploads/2015/10/Microservices-on-Docker-Webinar-Synerzip.pptx
