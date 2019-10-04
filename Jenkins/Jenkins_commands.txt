@@ -28,10 +28,11 @@ https://docs.aws.amazon.com/whitepapers/latest/jenkins-on-aws/installation.html
 
 
 -----Jenkins_Config-----
-# cat /etc/sysconfig/jenkins		---> this is the jenkins config file
+# cat /etc/sysconfig/jenkins		---> this is the jenkins config file(to change jenkins_user/port)
 # JENKINS_LOG=/var/log/jenkins		---> Jenkins log directory
 # cat /var/log/jenkins/jenkins.log	---> Jenkins log file
 # JENKINS_HOME=/var/lib/jenkins		---> Jenkins Home Path
+
 
 -----Jenkins_URL-----
 http://18.219.228.115:8080/
