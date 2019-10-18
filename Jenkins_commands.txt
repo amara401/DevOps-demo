@@ -39,5 +39,8 @@ user:admin
 password:admin
 
 ---POLL SCM---
-
+1. To automatically poll a Subversion repository, you must first have created at least one Jenkins job. To get started, click on the desired Jenkins job from within uberSVN’s ‘Jenkins’ tab.
+2. On the next screen, click ‘Configure.’
+3. Select ‘Subversion modules’ and enter the URL of the repository you want Jenkins to poll.
+4. Under the ‘Build Triggers’ heading, select ‘Poll SCM Schedule.’ A new text box will open, where you can enter how often you want Jenkins to poll the repository. In this example, Jenkins will poll the Subversion repository every five minutes. Alternatively, you can specify particular dates and times, using the following formula:
 
