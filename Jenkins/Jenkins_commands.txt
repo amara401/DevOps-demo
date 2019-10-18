@@ -39,4 +39,6 @@ http://18.219.228.115:8080/
 user:admin
 password:admin
 
-if we want to use any plugins, make sure that plugins are installed in server(putty)
+if we want to use any plugins, make sure that plugins are installed in server(putty).
+
+testing for hook
