@@ -1,0 +1,11 @@
+Current instructions to install PIP on Macos or OS X
+----------------------------------------------------
+
+Run the following command from the command line:
+
+sudo easy_install pip
+
+Version History
+---------------
+
+11/18/2017 - Initial version
