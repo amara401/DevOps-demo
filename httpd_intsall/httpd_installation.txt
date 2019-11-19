@@ -1,0 +1,48 @@
+1. sudo yum -y update
+2. sudo yum install -y httpd
+3. sudo service httpd start
+4. ps -ef | grep httpd | grep -v grep
+	#/etc/sysconfig/httpd
+	/var/run/httpd/httpd.pid ---> pid file
+
+5. cd /etc/httpd/conf.d 
+6. create new file vhost.conf
+7.add below data into vhost.conf file 
+	<VirtualHost *:80>
+    ServerAdmin demo@gmail.com
+    ServerName demo.com
+    ServerAlias www.demo.com
+    DocumentRoot /var/www/html/demo.com/
+    ErrorLog /var/log/httpd/demo.com/error.log
+    CustomLog /var/log/httpd/demo.com/access.log combined
+</VirtualHost>
+
+ mkdir /var/www/html/demo.com
+ mkdir /var/log/httpd/demo.com
+ echo "Welcome to My first Website" > /var/www/html/demo.com/index.html
+ open server with ip adress.
+
+			(OR)
+7.vi /etc/httpd/conf/httpd.conf --> httpd default config file (open file and add below content to the file.)
+<VirtualHost 13.233.129.103:80>
+ServerAdmin god@godana.com
+DocumentRoot /var/www/html/god-gana.com
+ServerName www.god-gana.com
+ErrorLog logs/www.god-gana.com-error_log
+CustomLog logs/www.god-gana.com-access_log common
+</VirtualHost>
+
+8.Next, search for the “NameVirtualHost” in the same file & uncomment it by removing ‘#’ from the starting of the line & add the IP of the server, so it should look like
+
+		NameVirtualHost 192.168.0.120:80
+9.stop the services and start after some tiime to update changes (restart the httpd service)
+
+
+Reference:
+-> How to Configure Apache Web Server in Redhat Linux:
+	-> https://www.computernetworkingnotes.com/rhce-study-guide/how-to-configure-apache-web-server-in-redhat-linux.html
+	-> https://linuxtechlab.com/beginner-guide-configure-apache/
+	-> https://www.tecmint.com/install-apache-on-centos-7/
+	-> https://phoenixnap.com/kb/install-apache-on-centos-7
+-> IP Aliasing : Assigning multiple IP addresses to single NIC:
+	https://linuxtechlab.com/ip-aliasing-multiple-ip-single-nic/
