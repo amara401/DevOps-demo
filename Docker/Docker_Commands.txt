@@ -127,6 +127,57 @@ my#>exit
 10. access via containerIP
 
 
+###---bind mount volumes---###
+docker-machine active	---> list the active running
+docker images	---> to bring the list o images runnng
+docker ps -a	---> lis the  running containers
+docker run --help
+# create a dir & file on host mahine to (bind) mount 
+mkdir data
+cd data
+touch test.txt
+docker run -it --name test1 -v <src_path>:<dest_path> 
+src_path: host dir name (absolute path or relative path)
+dest_path: where u mount into container
+docker run -it --anme test1 -v ~/data/:/data ubuntu /bin/bash ---> bind the mount vol into container
+# check into container the dir "data" has exist into container
+#come out from container "exit"
+#edit the test.txt file with some context
+docker start test1
+docker exec -it test1 /bin/bash
+#check into container what we edited into test.txt will be updated into container also.
+
+# how to debug mount points
+docker inspect <container_id>
+#it return big JSON file, search for mount here it will show complete details about mount point
+
+#docker volume
+docker run -it --name test2 -v data:/data ubuntu /bin/bash	---> it will create blank mount dir as data
+#it will use to share the data between containers
+docker volume ls  --> lis the volume as created
+docker exec -it test2 /bin/bash
+# cd data/
+touch test1.txt
+docker rm -f test2
+docker ps -a
+docker volume ls ---> still vol is present even remove the container
+docker run -it --name test3 -v data/:/data ubuntu /bin/bash
+#volume attache with new container
+docker volume rm data
+
+
+#mount vol from the specified containers
+docker run -it --name master -v backup/:/backup -v logs/:/logs ubuntu /bin/bash  --->it will create dir mount dir into container
+touch backup/bkp.atr
+touch logs/temp1.log
+exit
+docker volume ls
+docker run -it --name slave1 --volumes-from master ubuntu /bin/bash  ---> mount the vol from master container, i.e sharing between container
+
+docker volume inspect backup  ---> it will show low level JSON context with name, Driver, Mountpoint
+docker inspect master	---> show big JSON file, search for mount for more details for vol mount points
+
+
 ###---others---###
 #docker stop <Container_ID>		---> to stop the container
 #docker start <Container_ID>	---> to start the container
