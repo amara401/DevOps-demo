@@ -1,0 +1,14 @@
+#!/bin/ksh
+#Script to get the no.of commits from all projects in SVN
+
+link = "https://<SVN_URL>/svn"
+echo "Below are the SVN commits"
+echo "---------------------------------------"
+
+for fil in `ls /data/scm/svn_access/*-svnaccess.txt | grep -v 'Servers\|scmadmin\|102898'`
+do
+     f_fil = `basename $fil`
+     r_name = `echo $f_fil | awk -F "-svnaccess.txt" '{print $1}'`
+     r_count = `/opt/CollabNet_Subversion/bin/svn log -vr {2019-07-01}:{2019-07-09} $link/$r_name --non-interactive --no-auth-cache --username <USER_NAME> --password <PASSWORD> | grep "|" | wc -l`
+     echo "$r_name : $r_count"
+done

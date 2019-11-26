@@ -1,0 +1,99 @@
+#!/bin/bash
+
+#Script to revoke users access from SVN
+# Script to revoke users  access from SVN
+# Script will also send a mail of the output diff of the files changed to our group
+
+tstamp=`date +%h%d%Y`
+stamp=`date +%h%d%Y_%H%M%S`
+logfile=SVN_change_log_Terms_Linux_${stamp}.txt
+
+msg(){
+	echo "$(date +'%h %d %Y:%M %S') - $1"
+}
+
+backup(){
+	msg "Checking if Terms.txt file exists"
+	
+	if [ ! -f Terms.txt ]; then
+		msg "[ERROR]: Terms.txt file doesn't exist. Existing the script"
+		exit
+	fi
+	
+	msg "converting Terms.txt to UNIX format"
+	/usr/bin/dos2unix Terms.txt
+	
+	msg "Taking back of /e/svn/access_files"
+	cp -R /e/svn/access_files /e/svn/access_files_bkp
+	tar -zcvf /e/svn/backup_svn_access_files/access_files_bkp_${tstamp}.tar.gz /e/svn/access_files_bkp --remove-files > /dev/null 2>&1
+	
+	if [ $? -eq 0 ]; then
+		msg "[INFO]: Backup Successfull & then file is at /e/svn/backup_svn_access_files/access_files_bkp_${tstamp}.tar.gz"
+	else
+		msg "[ERROR]: Backup Unsucessfull. Existing the script"
+		exit
+	fi
+	
+	if [ -f Terms.txt ]; then
+		msg "[INFO]: Copying the Terms.txt file to /e/svn/backup_svn_access_files/"
+		cp Terms.txt /e/svn/backup_svn_access_files/Terms.txt_${stamp}
+	fi
+	
+	if [ -f svn_change_log_*.txt ]; then
+		msg "[INFO]: Moving the previous svn_change_log.txt to /e/svn/backup_svn_access_files/"
+		mv svn_change_log_*.txt /e/svn/backup_svn_access_files/
+	fi
+}
+
+remove_users(){
+	msg "[INFO]: Preparing to remove SVN users from SVN access files"
+	
+	for list in `Terms.txt`
+	do
+		grep -il ${list} /e/svn/access_files/*_svnaccess.txt >> svn_proj_list.txt
+		
+		if [ ! -s svn_proj_list.txt ]; then
+			msg "[INFO]: User - ${list} is not there any of the access files. Continuing the next user"
+			continue
+		fi
+		
+		msg "[INFO]: Working on deleting user - ${list} from the SVn access file" | tee -a ${logfile}
+		echo "--------------------------------------------------------------------------------------" >> ${logfile}
+		echo "[INFO]: User - ${list} will be removed fromm the below projects" >> ${logfile}
+		echo "--------------------------------------------------------------------------------------" >> ${logfile}
+		cat svn_proj_list.txt >> ${logfile}
+		
+		for plist in `cat svn_proj_list.txt`
+		do
+			#sed -i.bak -e "s/${list}, //gI" -e "s/, ${list}//gI"
+			#sed -i.bak -e "s/\<${list}\>, //gI" -e "s/, \<${list}\>//gI" -e "s/\<x_${list}\>, //gI" -e "s/, \<x_${list}\>//gI" -e "s/\<aa_${list}\>, //gI" -e "s/, \<aa_${lsit}\>//gI" -e "s/\<mic\\\\${list}\>, //gI" -e "s/, \<mic\\\\${list}\>//gI" -e "s/\<$list\>//gI" $plist
+			sed -i.bak -e "s/\<nao\\\\${list}\>, //gI" -e "s/, \<nao\\\\${list}\>//gI" -e "s/\<nao\\\\x_${list}\>, //gI" -e "s/, \<nao\\\\x_${list}\>//gI" -e "s/\<nao\\\\aa_${list}\>, //gI" -e "s/, \<nao\\\\aa_${lsit}\>//gI" -e "s/\<mic\\\\${list}\>, //gI" -e "s/, \<mic\\\\${list}\>//gI" -e "s/\<nao\\\\$list\>//gI" $plist
+			msg "[INFO]: Below  is the diff  of ${plist}.bak  & ${plist} files " >> ${logfile}
+			echo "----------------------------------------------------------------------------------" >> ${logfile}
+			diff ${plist}.bak ${plist} >> ${logfile}
+			echo "----------------------------------------------------------------------------------" >> ${logfile}
+			rm -f ${plist}.bak
+		done
+		
+		#rm -f svn_proj_list.txt
+		msg "[INFO]: Revoking the access for USER: ${list}"
+	done
+	
+	rm -f svn_proj_list.txt
+}
+
+send_mail() {
+	msg "[INFO]: mail sent to mada.amarnadh@gmail.com"
+	if [ -f svn_change_log_*.txt ]; then
+		mailx -a ${logfile} -s "SVN changed log for revoked users" mada.amarnadh@gmail.com < /dev/null
+	else
+		mailx -a ${logfile} -s "SVN Change log: NO CHANGS THIS TIME" mada.amarnadh@gmail.com < /dev/null
+	fi
+}
+
+backup
+remove_users
+send_mail
+
+
+

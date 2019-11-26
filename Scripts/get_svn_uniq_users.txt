@@ -1,0 +1,27 @@
+#!/bin/bash
+
+#This script will get the all unique users form the SVN sccess file
+#and send you the report to your mailID
+
+if [ $# -eq 0 ]; then
+	echo "Please provide the valid email-ID as a parameter to this script"
+	echo "Example: $0 xyz@domain.com"
+	echo "Example: $0 aaa@XYZ.com,abc@domain.com"
+	exit
+fi
+
+for fil in `ls /data/scm/svn_access/*-svnaccess.txt`
+do
+	echo "Working on ${fil}"
+	prj=`echo ${fil} | awk -F"/" '{print $NF}' | awk -F"-svnaccess.txt" '{print $1}'`
+	cat ${fil} | grep -v '^$\|#\|\[\|\@\|*' | while read line
+	do
+		echo ${line} | awk -F" = " '{print $2}' | tr -d " " | tr ',' '\n' | tr '[:upper:]' '[:lower:]' | sort | uniq | grep -iv 'aa_\|x_' >> /tmp/${prj}_all_users.txt
+	done
+	
+	cat /tmp/${prj}_all_users.txt | sort | uniq >> /tmp/svn_all_users.txt
+done
+
+cat /tmp/svn_all_users.txt | grep -v '^$'|sort|uniq > /tmp/svn_uniq_users.txt
+mailx -a /tmp/svn_uniq_users.txt -s "SVN Unique Users List" $1 < /dev/null
+rm -f /tmp/svn_uniq_users.txt /tmp/svn_all_users.txt

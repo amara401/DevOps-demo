@@ -1,0 +1,43 @@
+#!/bin/bash
+
+#------------------------------------------------------------------------------------------------------------#
+#This script will use raw_file.txt as input and add users in the list to the access files					 #
+#and also send an email of the output diff of the files changed to our group.								 #
+#Make sure the raw file has users with lowercase as all users we need to SVN access files should be lowercase#
+#------------------------------------------------------------------------------------------------------------#
+
+stamp=`data +%h%d%Y_%H%M%S`
+logfile=svn_add_users_log_${stamp}.txt
+
+cat raw_file.txt | while read lin
+do
+	patt=`echo ${lin} | awk -F " - " '{print $1}'`
+	role=`echo ${lin} | awk -F " - " '{print $2}'`
+	prj=`echo ${patt} | awk -F " - " '{print $2}'`
+	usr=`echo ${patt} | awk -F " - " '{print $1}'`
+	
+	if [ -f /data/scm/svn_access/${prj}-svnaccess.txt ]; then
+		grep "^${role} =" /data/scm/svn_access/${prj}-svnaccess.txt | grep -i $usr
+		
+		if [ $? -eq 0 ]; then
+			echo "User - $usr already exists  in that role, continuing with the next user"
+			continue
+		fi
+	
+		echo "Working on user - ${usr} at ${prj}-svnaccess.txt"
+		sed -i.bak "/^${role}/ s/$/, ${usr}" /data/scm/svn_access/${prj}-svnaccess.txt
+		echo "------------------------------------------------------------------------" | tee -a /tmp/${logfile}
+		echo "User - ${usr} added to role - ${role} at /data/scm/svn_access/${prj}-svnaccess.txt" | tee -a /tmp/${logfile}
+		echo "------------------------------------------------------------------------" >> /tmp/${logfile}
+		echo "Below is the diff of ${prj}-svnaccess.txt.bkp & ${prj}-svnaccess.txt" >> /tmp/${logfile}
+		echo "------------------------------------------------------------------------" >> /tmp/${logfile}
+		diff /data/scm/svn_access/${prj}-svnaccess.txt.bkp /data/scm/svn_access/${prj}-svnaccess.txt >> /tmp/${logfile}
+		echo "------------------------------------------------------------------------" >> /tmp/${logfile}
+		mv /data/scm/svn_access/${prj}-svnaccess.txt.bkp /data/scm/backup_svn_access_files/${prj}-svnaccess.txt_${stamp}
+		echo "------------------------------------------------------------------------" >> /tmp/${logfile}
+	fi
+done
+
+msg "[INFO]: mail sent to mada.amarnadh@gmail.com"
+mailx -a /tmp/${logfile} -s "SVN log for users added" mada.amarnadh@gmail.com < /dev/null
+	

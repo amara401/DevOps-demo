@@ -1,0 +1,16 @@
+#!/bin/bash
+
+#Script to get SVN owners details from access files
+
+for fil in `ls /data/scm/svn_access/*-svnaccess.txt`
+do
+	pjt=`echo ${fil} | awk -F"/" '{print ${NF}' | awk -F"-svnaccess.txt" '{print $1}'`
+	
+	if [ `cat ${fil} | grep i owner > /dev/null; echo $?` -eq 1 ]; then
+		out1 =`echo "NO Owner defined"`
+		echo "${prj} - ${out1}" 
+	else
+		out2=`cat ${fil} | grep -i owner | tr '\n' ' '`
+		echo "${prj} - ${out2}"
+	fi
+done

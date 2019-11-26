@@ -1,0 +1,24 @@
+#!/bin/bash
+# Script to get the no.of commits from all projects in bitbucket
+echo "Please enter your bitbucket username:"
+read bb_name
+echo "Please enter the password:"
+stty -echo
+read bb_pass
+stty echo
+
+for aa in `/bin/curl -sku $bb_name:$bb_pass https://<bitbucket_URL>/rest/api/1.0/projects?limit=1000 | tr ',' '\n' | grep key | awk -f: '{print $NF}' | sed 's|"||g'`
+do
+   echo "Working on project - $aa"
+   # count= `/bin/curl -sku $bb_name:$bb_pass https://<bitbucket_URL>/rest/api/1.0/projects?limit=1000 | tr ',' '\n' | grep key | awk -f: '{print $NF}' | sed 's|"||g' | awk -F/ '{print $NF}' | sed 's/$*.git//g' | wc -l`
+   # echo "$aa : $count"
+   for bb in `/bin/curl -sku $bb_name:$bb_pass https://<bitbucket_URL>/rest/api/1.0/projects?limit=1000 | tr ',' '\n' | grep key | awk -f: '{print $NF}' | sed 's|"||g' | awk -F/ '{print $NF}' | sed 's/$*.git//g'`
+   do
+	git clone https://$bb_name:$bb_pass@<bitbucker_URL>/scm/$aa/$bb.git > /dev/null 2>&1
+	cd /tmp/$bb > /dev/null 2>&1
+	count `git log --date=short --after="2019-06-01" --before="2019-07-09" | wc -l` > /dev/null 2>&1
+	cd - >/dev/null 2>&1
+	rm -rf /tmp/$bb
+	echo "$bb : $count"
+   done
+done >> bb_count.txt
