@@ -1,0 +1,18 @@
+Amazon DocumentDB: -> It will compact with MongoDB
+-> Moving Db-2008 into AWS and then DB-2018 (Migrating)
+-> Migration - Depends on the OS and version
+	-> Through Re-Host (Amazon SMS/CloudEdure)
+	-> Windows Xp/7/8/Linux -> Re-Host -> Amazon EC2 (2012/7/8/Linux)
+-> Re-Platform:
+	-> Windows 2003/2008 -> Re-Platform -> Windows 2012
+		-> Through Re-Platform (Amazon SMS/CloudEdure)
+		-> Programm think
+-> Migration Pattern - Database:
+	-> Most of SQl DB's are Vault Db's.
+	-> Re-Host:
+		-> MySQL -> AWS DMS/HVR -> Amazon EC2
+	-> Re-Platform:
+		-> MySQL -> AWS DMS/HVR -> Amazon RDS
+	-> Re-Factor:
+		-> MySQL -> AWS DMS-SCT/HVR -> Amazon EC2 or Amazon RDS -> MySQL/PostgreSQL/MariaDB/AuroraDB.
+	

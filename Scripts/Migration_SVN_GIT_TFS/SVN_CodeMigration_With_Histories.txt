@@ -1,0 +1,12 @@
+SVN CodeMigration With Histories:
+Step 1: Clone the SVN repository
+		#svn co https://prukdc0svn01.corp.pandhltd.com/subversion/talendsvn/
+Note: If you are cloning 1st, will ask username & password. Provide the details to proceed.
+Step 2: Create a new folder
+		#mkdir <Dir_Name>
+Step 3: Add and Commit newly created directory to SVN repo.
+		#svn add <Dir_Name>
+		#svn commit -m <comment>
+Step 4. Import the files/folder from local machine to SVN repo.
+		#svn import -m <comment> <Local_dir/> <svnrepo_url>
+Note: If you have downloaded file, please upload to Jump server and then copy to any tmp or working directory of SVN server to perform the above step

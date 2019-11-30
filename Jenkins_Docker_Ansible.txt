@@ -1,7 +1,0 @@
-https://itnext.io/ci-cd-with-jenkins-and-ansible-f41ef2b33977
-https://technologyconversations.com/2015/02/11/continuous-integration-delivery-or-deployment-with-jenkins-docker-and-ansible/
-https://medium.com/@tedchength/basic-deployment-with-ansible-docker-jenkins-and-git-4f3b42fb2f5e
-https://jenkins.io/doc/book/pipeline/docker/
-https://blog.nimbleci.com/2016/08/31/how-to-build-docker-images-automatically-with-jenkins-pipeline/
-https://in.mathworks.com/help/images/generate-hdl-code-for-image-sharpening.html
-https://code-maze.com/ci-jenkins-docker/

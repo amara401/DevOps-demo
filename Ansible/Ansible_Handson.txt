@@ -1,0 +1,914 @@
+
+Subject: RE: ansible doc
+
+ 
+
+Ansible-galaxy install username.role
+
+
+
+- hosts: webservers
+
+  sudo: yes
+
+  vars:
+
+    http_port: 80
+
+    doc_root: /var/www/html/ansible
+
+    doc_dir: /ansible/
+
+    max_clients: 5
+
+  vars_prompt:
+
+  - name: username
+
+    prompt: What is your name? What is your ques? What is your fav color?
+
+  tasks:
+
+  - name: Install web server
+
+    yum: name=httpd state=present
+
+    when: ansible_os_family="RedHat"
+
+ 
+
+  - name: start web server
+
+    service: name=httpd state=started enabled=yes
+
+ 
+
+  - name: copy httpd.conf
+
+    template: src=template/httpd.j2 dest=/etc/https/conf/httpd.conf owner=httpd
+
+    notify:
+
+    - restart apache
+
+ 
+
+  - name: copy index.html
+
+    template: src=template/index.j2 dest={{ doc_root }}/index.html
+
+ 
+
+  handlers:
+
+  - name: restart apache
+
+    service: name=httpd state=restarted
+
+ 
+
+- hosts: dbservers
+
+  sudo: yes
+
+  tasks:
+
+  - name: Install db server
+
+    yum: name=mysql-server state=present
+
+   when: ansible_os_family=""RedHat"
+
+ 
+
+  - name: start db server
+
+    service: name=mysqld state=started
+
+ 
+
+- hosts: webservers:dbservers
+
+  sudo: yes
+
+  tasks:
+
+  - name: stop firewall
+
+    service: name=iptables state=stopped
+
+ 
+
+----include----
+
+ 
+
+tasks:
+
+- include: loadbalancer.yml
+
+  vars:
+
+    sitename: value
+
+- include_vars: variables.yml
+
+ 
+
+----register----
+
+tasks:
+
+- shell: /usr/bin/whoami
+
+  register: username
+
+ 
+
+file: path=/home/vagrant/myfile.txt
+
+      owner={{username}}
+
+ 
+
+----debug----
+
+tasks:
+
+- debug: msg="displayig sometign during execution {{some_value_variable}}"
+
+- shell: /usr/bin/whoami
+
+  register: username
+
+-debug: var=username
+
+ 
+
+----user input----
+
+- hosts: web1
+
+  vars_prompt:
+
+  - name: "sitename"
+
+    prompt: "what is the sitename"
+
+ 
+
+  tasks:
+
+  - debug: msg="the site name is {{sitename}}"
+
+ 
+
+ 
+
+----handlers----
+
+- hosts: web1
+
+  tasks:
+
+  - copy: src=file/httpd.conf dest=/etc/httpd/conf/
+
+    notify:
+
+    - apache restart 
+
+ 
+
+  handlers:
+
+  - name: apache restart
+
+    service: name=httpd state=restarted
+
+ 
+
+ 
+
+----conditionals----
+
+1)
+
+tasks:
+
+- name: install web server only when os is redhat
+
+  yum: name=httpd state=present
+
+  when: ansible_os_family=="RedHat"
+
+ 
+
+- name: install web server only when os is debian
+
+  apt: name=apche2 state=present
+
+  when: ansible_os_family=="Debian"
+
+ 
+
+2)
+
+tasks:
+
+- command: ls /path/doesnt/exist
+
+  register: result
+
+  ignore_errors: yes
+
+ 
+
+- debug: msg="failure!"
+
+  when: result|failed
+
+ 
+
+ 
+
+failed/skipped/success
+
+ 
+
+----templates----
+
+ 
+
+tasks:
+
+- template: src=template/httpd.j2 dest=/etc/httpd/conf/httpd.conf owner=httpd
+
+ 
+
+cat ./ansible.cfg
+
+hostfile = inventory
+
+ 
+
+cat ./inventory
+
+acs ansible_ssh_host=192.168.33.10 ansible_ssh_user=vagrant ansible_ssh_pass=vagrant
+
+web1 ansible_ssh_host=192.168.33.20 ansible_ssh_user=vagrant ansible_ssh_pass=vagrant username=ansible_user
+
+db1 ansible_ssh_host=192.168.33.30
+
+ 
+
+[webservers]
+
+web1
+
+ 
+
+[dbservers]
+
+db1
+
+ 
+
+[datacenter:children]
+
+web1
+
+db1
+
+ 
+
+[datacenter:vars]
+
+ansible_ssh_user=vagrant
+
+ansible_ssh_pass=vagrant
+
+ 
+
+ 
+
+./web_db.yml
+
+---
+
+- hosts: webservers
+
+  sudo: yes
+
+  tasks:
+
+  - name: Install web server
+
+    yum: name=httpd state=present
+
+ 
+
+  - name: start web server
+
+    service: name=httpd state=started enabled=yes
+
+ 
+
+- hosts: dbservers
+
+  sudo: yes
+
+  tasks:
+
+  - name: Install db server
+
+    yum: name=mysql-server state=present
+
+ 
+
+  - name: start db server
+
+    service: name=mysqld state=started
+
+ 
+
+- hosts: webservers:dbservers
+
+  sudo: yes
+
+  tasks:
+
+  - name: stop firewall
+
+    service: name=iptables state=stopped
+
+ 
+
+ansible-playbook web_db.yml
+
+ 
+
+ 
+
+remove [datacenter:vars] from inventory, playbook will fail for db host as they dont have ssh_user defined
+
+ 
+
+use below command to retry only for the failed host
+
+ 
+
+ansible-playbook web_db.yml --limit @/home/vagrant/web_db.yml.retry
+
+ 
+
+Playbooks
+
+ 
+
+Play maps a host to tasks
+
+A play can have multiple tasks
+
+A playbook can have multiple plays
+
+ 
+
+Playbook breakdown
+
+---
+
+-          Hosts: webservers
+
+Remote_user: root
+
+Tasks:
+
+         (-) name: installing web server
+
+              Yum: name=httpd state=present
+
+         (-) name: starting web server
+
+              Service: name=httpd state=started enabled=yes
+
+ 
+
+-          Hosts: dbservers
+
+Remote_user: root
+
+Tasks:
+
+         (-) name: installing db server
+
+              Yum: name=mysql-server state=present
+
+         (-) name: starting db server
+
+              Service: name=mysqld state=started
+
+ 
+
+ 
+
+Global play declaration section
+
+ 
+
+-          Hosts: webservers
+
+Vars:
+
+   Var1=value1
+
+   Var2=value2
+
+   Var3=value3
+
+Sudo: yes
+
+Sudo_user: wordpress_user
+
+Gather_facts: no
+
+ 
+
+ 
+
+Execution
+
+ 
+
+Ansible-playbook playbook.yml
+
+ 
+
+If a host is failed in a task its removed from rest of the playbook
+
+ 
+
+Limitting execution to just the below task
+
+--limit @/home/vagrant/ping.retry
+
+
+
+ 
+
+Setup module (gather facts)
+
+ 
+
+Ansible web1 –I inventory –m setup
+
+Lists all the variables/facts
+
+ 
+
+Ansible web1 –I inventory –m setup –a “filter=ansible_eth*”
+
+Lists all the network interface variables
+
+ 
+
+Ansible all –I inventory –m setup tree ./setup
+
+Creates server specific files in ./setup directory such as db1 and web1 which lists server specific facts
+
+
+
+ 
+
+Demo:
+
+ 
+
+Ansible-documentation for yum module
+
+ 
+
+Ansible-doc yum
+
+ 
+
+Installing webserver
+
+ 
+
+Ansible webservers –I inventory –m yum –a “name=httpd state=present”--sudo
+
+ 
+
+Starting webserver
+
+ 
+
+Ansible webservers –I inventory –m service –a “name=httpd state=started enabled=yes” --sudo
+
+ 
+
+Installing db server
+
+ 
+
+Ansible dbservers –I inventory –m yum –a “name=mysql-server state=present” --sudo
+
+ 
+
+Start db server
+
+ 
+
+Ansible dbservers –I inventory –m yum –a “name=mysqld state=started” --sudo
+
+ 
+
+Stop the firewall
+
+ 
+
+Ansible webservers:dbservers –I inventory –m service –a “name=iptables state=stopped” –sudo
+
+ 
+
+ 
+
+Host/group target patterns
+
+ 
+
+OR
+
+Group1:group2
+
+ 
+
+AND
+
+Group1:&group2
+
+ 
+
+NOT
+
+!group1
+
+ 
+
+Wildcards
+
+Gro*.jpmchase.net
+
+ 
+
+regexp
+
+~web[0-9]+
+
+ 
+
+Example
+
+Webservers:&production:!python3
+
+(hosts defined in webservers and production nut not in python3)
+
+
+
+ 
+
+Modules
+
+ 
+
+462 modules
+
+ 
+
+Ansible-doc –l : list all the modules
+
+Ansible-doc <module> : documentation about a particular module
+
+Ansible-doc –s <module> : playbook example with <module>
+
+ 
+
+Modules even used for,
+
+Deploying configurations
+
+Managing servers
+
+Managing virtal servers
+
+Installing databases
+
+Managing network components
+
+Etc
+
+
+
+ 
+
+Python 3.0 or highter will make ansible fail.
+
+ 
+
+Host ansible_python_interpretter=<python 2 interpretter path> in ansible.cfg will work successfulyy if run the below command
+
+ 
+
+Ansible host –I inventory_with_python parameter;
+
+ 
+
+ 
+
+-----------------------------------------
+
+ 
+
+Ansible configuration files order-of-precedence
+
+ 
+
+$ANSIBLE_CONFIG
+
+./ansible.cfg
+
+~/ansible.cfg
+
+/etc/ansible/ansible.cfg
+
+ 
+
+Any setting in ansible.cfg can be overridden by env variables
+
+ 
+
+$ANSIBLE_<SETTING>
+
+ 
+
+Default:
+
+Forks 5
+
+Host_key_checking
+
+Log_path
+
+
+
+ 
+
+Variables –
+
+ 
+
+Type1
+
+Group_vars
+
+   File1
+
+   File2
+
+Host_vars
+
+  File3
+
+  File4
+
+Test_inventory
+
+Prod_inventory
+
+ 
+
+ 
+
+Type2
+
+Test
+
+Group_vars
+
+                                File1
+
+                                File2
+
+Host_vars
+
+                                File3
+
+                                File4
+
+Test_inventory
+
+ 
+
+Prod
+
+Group_vars
+
+                                File1
+
+                                File2
+
+Host_vars
+
+                                File3
+
+                                File4
+
+Prod_inventory
+
+ 
+
+Order-of-precedence
+
+ 
+
+Group_vars (ALL)
+
+Group_vars (group)
+
+Group_vars (host)
+
+
+
+ 
+
+environment:
+
+ 
+
+vagrant : environment controller
+
+virtual box: hypervisor server
+
+ansible: automation
+
+ 
+
+virtualbox
+
+acs: ansible-control-system
+
+web
+
+db
+
+ 
+
+installing ansible
+
+debian: sudo apt-get install ansible
+
+centos: sudo yum install epel-release
+
+        sudo yum install ansible
+
+All other systems without a package manager(PIP install): Install libraries (gcc, python-devel)
+
+                                                          Install python setup tools
+
+                                                          Install ansible
+
+ 
+
+ 
+
+inventory
+
+192.168.33.30
+
+192.168.33.20
+
+ 
+
+ansible all -i inventory -u vagrant -m ping -k
+
+ 
+
+-i : inventory file
+
+-u : login user
+
+-m : module
+
+-k : prompt for password
+
+-v : level1 debugging, verbose mode
+
+-vv : level2 debugging
+
+-vvv : level3 debugging :
+
+shows how the module executes
+
+establish a connection, create a temp directory in home, copy the python module, execute the module copied, remove the directory created.
+
+the feed back to the control machine is given back as a json file
+
+ 
+
+ansible 192.168.33.30 -i inventory -u vagrant -m ping -k -v
+
+ 
+
+ansible all -i inventory -u vagrant -m command -a "/sbin/reboot"
+
+or
+
+ansible all -i inventory -u vagrant -a "/sbin/reboot" as -m command is the default
+
+ 
+
+ 
+
+command and shell module works for same purpose, command executes using python shell executes on a shell where shell variable can be used.
+
+ 
+
+ 
+
+Inventory features:
+
+behavioural parameters
+
+groups
+
+groups of groups
+
+assign variables
+
+scaling out using multiple inventories
+
+stati/dynamic
+
+ 
+
+ 
+
+inventory example:
+
+ 
+
+[db]
+
+db1.jpmchase.net ansible_ssh_user=vagrant ansible_ssh_pass=#123
+
+db2.jpmchase.net ansible_python_interpreter=/usr/bin/python
+
+ 
+
+[datacenter-west:children]
+
+db
+
+ 
+
+[datacenter-west:vars]
+
+ssh_user=myuser
+
+ssh_pass=#sguyty56
+
+ 
+
+ 
+
+ 
+
+Demo Inventory:
+
+ 
+
+[webservers]
+
+web1 ansible_user_host=192.168.33.30
+
+ 
+
+[dbservers]
+
+db1 ansible_user_host=192.168.33.20
+
+ 
+
+[datacenter:children]
+
+webservers
+
+dbservers
+
+ 
+
+[datacenter:vars]
+
+ansible_ssh_user=something
+
+ansible_ssh_pass=something#123
