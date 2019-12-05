@@ -111,19 +111,19 @@ my#>exit
 #docker volume create <vol_name>
 #docker volume list
 #docker volume inspect <vol_name>
-#docker volume create --name demo --opt O=size=100m		---> Creating volume of size 100mb and with a name of demo
+#docker volume create --name demo --opt o=size=100m		---> Creating volume of size 100mb and with a name of demo
 #docker volume ls	---> to list the volumes
 
 ##--Sharing volume between container--##
 1. docker volume create <vol_name>
 2. docker pull httpd:2.4
-3. docker run -it -d --name www --mount source=<vol_name>, destination=/usr/local/apaache2/htdocs httpd:2.4
+3. docker run -it -d --name www --mount src=<vol_name>,target=/usr/local/apaache2/htdocs,type=bind httpd:2.4
 4. docker ps -a 
 5. docker inspect 
 6. docker exec -it www /bin/bash 
 7. echo "this is demo volume message" > /user/local/apache2/htdocs/index.html
 8. access via containerID ip via GUI
-9. docker run -it -d --name www2 --mount source=<vol_name> destination=/user/local/apache2/htdocs httpd:2.4
+9. docker run -it -d --name www2 --mount src=<vol_name>,target=/user/local/apache2/htdocs,type=bind httpd:2.4
 10. access via containerIP
 
 
@@ -192,7 +192,7 @@ docker inspect master	---> show big JSON file, search for mount for more details
 #docker push scmgalaxy/ub-up-gi
 #docker stats <container_ID>	---> to monitor the docker container
 #/var/lib/docker	---> docker keep all temp files related to images building & layers here
-
+# docker system df -v	---> displays information regarding the amount of disk space used by the docker daemon.
 
 ###---Remove container/Images---###
 1. docker ps -a | grep Exited | awk '{ print $1 }' | xargs docker rm	---> to remove the stopped container
