@@ -136,10 +136,10 @@ docker run --help
 mkdir data
 cd data
 touch test.txt
-docker run -it --name test1 -v <src_path>:<dest_path> 
+docker run -it --name test1 -v <src_path>:<dest_path> ubuntu /bin/bash
 src_path: host dir name (absolute path or relative path)
 dest_path: where u mount into container
-docker run -it --anme test1 -v ~/data/:/data ubuntu /bin/bash ---> bind the mount vol into container
+docker run -it --name test1 -v ~/data/:/data ubuntu /bin/bash ---> bind the mount vol into container
 # check into container the dir "data" has exist into container
 #come out from container "exit"
 #edit the test.txt file with some context
@@ -161,14 +161,13 @@ touch test1.txt
 docker rm -f test2
 docker ps -a
 docker volume ls ---> still vol is present even remove the container
-docker run -it --name test3 -v data/:/data ubuntu /bin/bash
-#volume attache with new container
-docker volume rm data
+docker run -it --name test3 -v data:/data ubuntu /bin/bash	---> volume attached with new container
+docker volume rm data	---> To remove volume
 
 
 #mount vol from the specified containers
-docker run -it --name master -v backup/:/backup -v logs/:/logs ubuntu /bin/bash  --->it will create dir mount dir into container
-touch backup/bkp.atr
+docker run -it --name master -v backup:/backup -v logs:/logs ubuntu /bin/bash  --->it will create dir (mount) into container
+touch backup/bkp.tar
 touch logs/temp1.log
 exit
 docker volume ls
