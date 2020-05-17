@@ -1,0 +1,151 @@
+1. Frog Artifactory requires Java Development Kit (JDK) 8 update 45 or above.
+   yum install -y java-1.8.0-openjdk-devel
+
+2. Install preqrequisite packages
+   yum install -y net-tools rsync
+  
+3. Install Jfrog Artifactory RPM
+   yum install -y jfrog-artifactory-oss-6.6.5.rpm
+
+   echo "export ARTIFACTORY_HOME=/opt/jfrog/artifactory" >> /etc/profile
+   . /etc/profile
+   env | grep ARTIFACTORY_HOME
+
+4. Installing MariaDB Database
+   yum install -y mariadb-server
+
+5. Start and Enable MariaDB Service.
+   systemctl start mariadb.service
+   systemctl enable mariadb.service
+
+6. Configure MariaDB database instance
+   # mysql_secure_installation
+
+    NOTE: RUNNING ALL PARTS OF THIS SCRIPT IS RECOMMENDED FOR ALL MariaDB
+          SERVERS IN PRODUCTION USE!  PLEASE READ EACH STEP CAREFULLY!
+
+    In order to log into MariaDB to secure it, we'll need the current
+    password for the root user.  If you've just installed MariaDB, and
+    you haven't set the root password yet, the password will be blank,
+    so you should just press enter here.
+
+    Enter current password for root (enter for none):
+    OK, successfully used password, moving on...
+
+    Setting the root password ensures that nobody can log into the MariaDB
+    root user without the proper authorisation.
+
+    Set root password? [Y/n] Y
+    New password:
+    Re-enter new password:
+    Password updated successfully!
+    Reloading privilege tables..
+    ... Success!
+
+
+    By default, a MariaDB installation has an anonymous user, allowing anyone
+    to log into MariaDB without having to have a user account created for
+    them.  This is intended only for testing, and to make the installation
+    go a bit smoother.  You should remove them before moving into a
+    production environment.
+
+    Remove anonymous users? [Y/n] Y
+    ... Success!
+
+    Normally, root should only be allowed to connect from 'localhost'.  This
+    ensures that someone cannot guess at the root password from the network.
+
+    Disallow root login remotely? [Y/n] Y
+    ... Success!
+
+    By default, MariaDB comes with a database named 'test' that anyone can
+    access.  This is also intended only for testing, and should be removed
+    before moving into a production environment.
+
+    Remove test database and access to it? [Y/n] Y
+    - Dropping test database...
+    ... Success!
+    - Removing privileges on test database...
+    ... Success!
+
+    Reloading the privilege tables will ensure that all changes made so far
+    will take effect immediately.
+
+    Reload privilege tables now? [Y/n] Y
+    ... Success!
+
+    Cleaning up...
+
+    All done!  If you've completed all of the above steps, your MariaDB
+    installation should now be secure.
+
+    Thanks for using MariaDB!
+
+7. Create and configure Artifactory database.
+   # sh /opt/jfrog/artifactory/bin/configure.mysql.sh
+
+    ########################################################
+    # Welcome to the Artifactory MySQL configuration tool! #
+    ########################################################
+
+    Stopping the Artifactory service...
+
+    Please enter the MySQL server admin username [root]:
+
+    Please enter the MySQL server admin password:
+    Please enter the Artifactory database username [artifactory]:
+
+    Please enter the Artifactory database password [password]:
+    Creating the Artifactory MySQL user and database...
+
+    No MySQL JDBC connector found. Download or copy one needed.
+    Does the current server has access to the Internet? [Y/n]Y
+
+    Downloading mysql-connector-java-5.1.24.jar to /opt/jfrog/artifactory/tomcat/lib...
+
+     Configuration completed successfully!
+    You can now start up the Artifactory service to use Artifactory with MySQL.
+    Press enter to exit...
+
+8. Start the JFrog artifactory
+   # systemctl start artifactory.service
+  Job for artifactory.service failed because the control process exited with error code. See "systemctl status artifactory.service" and "journalctl -xe" for details.
+
+9. Edit artifactory.service and add the user and group who own the service
+   # vi /lib/systemd/system/artifactory.service
+
+   Add following directives under the [service] section.
+
+    User=artifactory
+    Group=artifactory
+
+10. Set open file limits for the artifactory user.
+    echo "artifactory soft nofile 32000" >> /etc/security/limits.conf
+    echo "artifactory hard nofile 32000" >> /etc/security/limits.conf
+
+11. Now edit the artifactoryManage.sh script.
+    # vi /opt/jfrog/artifactory/bin/artifactoryManage.sh
+
+    Find and replace the following 4 lines of code with the given code (Find yellow code and replace it with green code).
+
+    #su -s "/bin/sh" ${ARTIFACTORY_USER} -c "${replicatorScript} start"
+    ${replicatorScript} start
+
+    #su -s "/bin/sh" ${ARTIFACTORY_USER} -c "${replicatorScript} stop"
+    ${replicatorScript} stop
+  
+    #su -s "/bin/sh" ${ARTIFACTORY_USER} -c "export JAVA_HOME='$JAVA_HOME'; $TOMCAT_HOME/bin/startup.sh"
+    $TOMCAT_HOME/bin/startup.sh
+
+    #su -s "/bin/sh" ${ARTIFACTORY_USER} -c "export JAVA_HOME='$JAVA_HOME'; $TOMCAT_HOME/bin/shutdown.sh"
+    $TOMCAT_HOME/bin/shutdown.sh
+
+12. Start and enable Artifactory service.
+    # systemctl start artifactory.service
+    # systemctl enable artifactory.service
+
+13. Now allow artifactory service port to make it accessible from the network.
+    # firewall-cmd --permanent --add-port=8081/tcp
+    # firewall-cmd --reload
+
+14. Browse URL http://<ip-addresss>:8081 from a client browser.
