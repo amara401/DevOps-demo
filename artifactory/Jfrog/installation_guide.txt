@@ -5,7 +5,9 @@
    yum install -y net-tools rsync
   
 3. Install Jfrog Artifactory RPM
-   yum install -y jfrog-artifactory-oss-6.6.5.rpm
+   wget https://bintray.com/jfrog/artifactory-rpms/rpm -O bintray-jfrog-artifactory-oss-rpms.repo;
+   sudo mv  bintray-jfrog-artifactory-oss-rpms.repo /etc/yum.repos.d/;
+   yum install jfrog-artifactory-oss
 
    echo "export ARTIFACTORY_HOME=/opt/jfrog/artifactory" >> /etc/profile
    . /etc/profile
