@@ -1,7 +1,7 @@
 pipeline {
 	agent any
 	stages {
-			stage ('Checkout') { unwanted data
+			stage ('Checkout') {
 			steps {
 				echo "Do the SVN/GIT Checkout"
 				}
@@ -38,5 +38,3 @@ pipeline {
 			}
 		}
 }	
-
-This is cpoied from master.
