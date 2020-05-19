@@ -26,6 +26,12 @@ https://docs.aws.amazon.com/whitepapers/latest/jenkins-on-aws/installation.html
 #sudo service jenkins start		---> To start the Jenkins
 #sudo chkconfig jenkins on
 
+-----If java11 installed need to run below task-----
+sudo yum install dejavu-sans-fonts
+sudo yum install fontconfig
+sudo yum install xorg-x11-server-Xvfb
+
+
 
 -----Jenkins_Config-----
 # cat /etc/sysconfig/jenkins		---> this is the jenkins config file(to change jenkins_user/port)
