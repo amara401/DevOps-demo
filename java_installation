@@ -1,0 +1,37 @@
+#Download java
+wget https://download.oracle.com/otn/java/jdk/11.0.7+8/8c7daf89330c48f0b9e32f57169f7bac/jdk-11.0.7_linux-x64_bin.tar.gz
+
+https://download.bell-sw.com/java/11.0.4/bellsoft-jdk11.0.4-linux-amd64.tar.gz
+https://download.oracle.com/otn/java/jdk/11.0.7+8/8c7daf89330c48f0b9e32f57169f7bac/jdk-11.0.7_linux-x64_bin.tar.gz?AuthParam=1589877531_2f614a6b878edc1d3eee6947d82fbda4
+https://bell-sw.com/pages/java-11.0.4/
+https://www.azul.com/downloads/zulu-community/?version=java-11-lts&architecture=x86-64-bit&package=jdk
+wget --no-cookies --no-check-certificate --header "Cookie: oraclelicense=accept-securebackup-cookie" https://download.oracle.com/otn-pub/java/jdk/12.0.1+33/312335d836a34c7c8bba9d963e26dc23/jdk-12.0.1_linux-x64_bin.deb
+
+
+#Login as root
+sudo su
+
+#create jdk directory
+mkdir /opt/jdk
+
+#uncompress, change to your file name
+tar -zxf jdk-11.0.7_linux-x64_bin.tar.gz -C /opt/jdk
+
+#check if files are there
+#ls /opt/jdk
+
+#update alternatives so the command java point to the new jdk 
+update-alternatives --install /usr/bin/java java /opt/jdk/jdk-11.0.7/bin/java 100
+
+
+#update alternatives so the command javac point to the new jdk 
+update-alternatives --install /usr/bin/javac javac /opt/jdk/jdk-11.0.7/bin/javac 100
+
+#check if java command is pointing to " link currently points to /opt/jdk/jdk-11.0.7/bin/java"
+update-alternatives --display java
+
+#check if java command is pointing to " link currently points to /opt/jdk/jdk-11.0.7/bin/javac"
+update-alternatives --display javac
+
+#check if java is running
+java -version
